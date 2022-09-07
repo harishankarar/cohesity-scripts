@@ -8,7 +8,8 @@ param (
     [Parameter()][string]$domain = 'local', #Cohesity user domain name
     [Parameter(Mandatory = $True)][string]$policyName, #Name of the policy to manage
     [Parameter(Mandatory = $True)][int]$daysToKeep,
-    [Parameter(Mandatory = $True)][string]$replicateTo
+    [Parameter(Mandatory = $True)][string]$replicateTo,
+    [Parameter()][string]$password
 )
 
 ### source the cohesity-api helper code

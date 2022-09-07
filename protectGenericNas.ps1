@@ -30,7 +30,8 @@ param (
     [Parameter()][array]$mountPath, # names of volumes to protect
     [Parameter()][string]$mountList = $null, # text file of volumes to protect
     [Parameter()][switch]$cloudArchiveDirect, # set new job to use cloud archive direct
-    [Parameter()][string]$storageDomainName = 'DefaultStorageDomain' #storage domain you want the new job to write to
+    [Parameter()][string]$storageDomainName = 'DefaultStorageDomain', #storage domain you want the new job to write to
+    [Parameter()][string]$password
 )
 
 if($cloudArchiveDirect){

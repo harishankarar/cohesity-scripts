@@ -16,7 +16,8 @@ param (
     [Parameter()][switch]$registerAD,
     [Parameter()][switch]$registerSQL,
     [Parameter()][switch]$sqlCluster,
-    [Parameter()][string]$serviceAccount = $null
+    [Parameter()][string]$serviceAccount = $null,
+    [Parameter()][string]$password
 )
 
 if($serverList){

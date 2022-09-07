@@ -19,7 +19,8 @@ param (
     [Parameter()][string]$policyName,  # protection policy name
     [Parameter()][switch]$paused,  # pause future runs (new job only)
     [Parameter()][ValidateSet('kBackupHDD', 'kBackupSSD')][string]$qosPolicy = 'kBackupHDD',
-    [Parameter()][switch]$disableIndexing
+    [Parameter()][switch]$disableIndexing,
+    [Parameter()][string]$password
 )
 
 # gather list of servers to add to job

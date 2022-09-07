@@ -17,7 +17,8 @@ param (
     [Parameter()][array]$mountPoint, # nas path to register (comma separated)
     [Parameter()][string]$mountList, # text file of nas paths to register (one per line)
     [Parameter()][string]$smbUserName = '', # username to register smb paths
-    [Parameter()][string]$smbPassword # password to register smb paths
+    [Parameter()][string]$smbPassword, # password to register smb paths
+    [Parameter()][string]$password 
  )
 
 # prompt for smb password if needed
