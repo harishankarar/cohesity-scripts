@@ -1,4 +1,12 @@
-### usage: ./createProtectionPolicy.ps1 -vip mycluster -username admin -policyName mypolicy -daysToKeep 30 -replicateTo myremotecluster 
+### usage:
+# ./createProtectionPolicy.ps1 -vip mycluster -username admin -password password -policyName mypolicy -daysToKeep 30 -replicateTo myremotecluster -copyPolicy policyToReplicate 
+# Options:  -vip - name or IP of Cohesity cluster
+#           -username: name of user to connect to Cohesity
+#           -password: pasword to authenticate Cohesity
+#           -policyName: name of the protection policy
+#           -daysToKeep: (optional) no of days to retain the backup (default 14)
+#           -replicateTo: replicate the backup to a remote cluster
+#           -copypolicy: (optional) to clone/copy an existing policy
 
 ### process commandline arguments
 [CmdletBinding()]
@@ -7,8 +15,9 @@ param (
     [Parameter(Mandatory = $True)][string]$username, #Cohesity username
     [Parameter()][string]$domain = 'local', #Cohesity user domain name
     [Parameter(Mandatory = $True)][string]$policyName, #Name of the policy to manage
-    [Parameter(Mandatory = $True)][int]$daysToKeep,
+    [Parameter()][int]$daysToKeep = 14,
     [Parameter(Mandatory = $True)][string]$replicateTo,
+    [Parameter()][string]$copyPolicy,
     [Parameter()][string]$password
 )
 
@@ -17,6 +26,23 @@ param (
 
 ### authenticate
 apiauth -vip $vip -username $username -password $password
+
+if ($copyPolicy){
+    $copyPolicies = api get protectionPolicies | Where-Object name -eq $copyPolicy
+    if(! $copyPolicies){
+        write-warning "policy $copyPolicy does not exists"
+        exit
+    } 
+    $daysToKeep = $copyPolicies | Select-Object -ExpandProperty daysToKeep
+    $retryIntervalMins =  $copyPolicies | Select-Object -ExpandProperty retryIntervalMins
+    $retries =  $copyPolicies | Select-Object -ExpandProperty retries
+    
+} else {
+    ## Setting default values
+    #$daysToKeep = 14;
+    $retryIntervalMins = 30;
+    $retries = 3;
+}
 
 ### get existing policies
 $policies = api get protectionPolicies | Where-Object name -eq $policyName
@@ -43,8 +69,8 @@ if($policies){
             }
         };
         'daysToKeep' = $daysToKeep;
-        'retries' = 3;
-        'retryIntervalMins' = 30;
+        'retries' = $retries;
+        'retryIntervalMins' = $retryIntervalMins;
         'blackoutPeriods' = @();
         'snapshotReplicationCopyPolicies' = @(
             @{
